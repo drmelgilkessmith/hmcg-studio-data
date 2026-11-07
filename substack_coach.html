@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Substack Coach — HMCG Studio</title>
+<style>
+:root{--ink:#0F1920;--teal:#008DBA;--teal-d:#00739A;--lime:#9EC13B;--line:#DCE7EE;--faint:#9AAAB2;--warn:#B8492A;--bg:#F6F9FB;--side:#0F1920;--side2:#13232C}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:#DCE7EE;padding:18px 0 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{padding:0 18px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand b{display:block;font-size:19px;letter-spacing:.2px;color:#fff}
+.brand span{display:block;font-size:12px;color:var(--faint);margin-top:3px}
+.backlink{display:block;padding:10px 18px;color:#9AC6D8;font-size:13px;text-decoration:none}
+.backlink:hover{color:#fff}
+.nav{padding:6px 10px;flex:1}
+.nav-g{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:14px 8px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;color:#DCE7EE;font:inherit;font-size:14.5px;padding:9px 10px;border-radius:8px;cursor:pointer}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:var(--teal);color:#fff}
+.ic{width:19px;height:19px;flex:none}
+.side-foot{padding:12px 18px;font-size:12px;color:var(--faint);border-top:1px solid rgba(255,255,255,.08)}
+.main{min-width:0;padding:26px 34px 60px;max-width:1060px}
+.kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700}
+h1{font-size:30px;margin:4px 0 8px;letter-spacing:-.3px}
+.lead{color:#51656F;max-width:640px;margin:0 0 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>.fld{flex:1;min-width:160px}
+.fld{margin:0 0 10px}
+.fld label{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#51656F;font-weight:700;margin-bottom:5px}
+input[type=text],input[type=password],input[type=date],input[type=number],select,textarea{width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(0,141,186,.35);border-color:var(--teal)}
+.hint{font-size:12.5px;color:#6B7E88}
+.ph{color:var(--warn)}
+.btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13.5px;font-weight:600;border-radius:8px;border:1px solid transparent;padding:8px 14px;cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{background:#fff;color:var(--teal-d);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--teal)}
+.btn-lime{background:var(--lime);color:#17300B}
+.btn-danger{background:#fff;color:var(--warn);border-color:var(--line)}
+.btn-sm{padding:6px 11px;font-size:12.5px}
+.btn-link{background:none;border:0;color:var(--teal-d);font:inherit;font-size:13px;cursor:pointer;padding:4px 6px;text-decoration:underline;text-underline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:default}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:3px 10px;background:#EDF2F5;color:#51656F;white-space:nowrap}
+.pill.posted{background:#E7F3DF;color:#3C6B14}
+.pill.ready{background:#E0F0F7;color:var(--teal-d)}
+.pill.draft{background:#F1EDE2;color:#7A6428}
+.empty{border:1.5px dashed var(--line);border-radius:10px;padding:30px;text-align:center;color:#51656F;background:#fff}
+.note-row{display:grid;grid-template-columns:70px minmax(0,1fr) auto auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin-bottom:8px}
+.note-date{font-weight:700;font-size:13.5px}
+.note-date span{display:block;font-weight:400;font-size:11.5px;color:var(--faint)}
+.note-main{min-width:0}
+.note-meta{font-size:12.5px;color:#6B7E88;margin-top:2px}
+.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.edit{grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:16px 0 14px;flex-wrap:wrap}
+.tab{font:inherit;font-size:13.5px;font-weight:600;color:#51656F;background:none;border:0;border-bottom:2.5px solid transparent;padding:8px 12px;cursor:pointer}
+.tab.active{color:var(--teal-d);border-bottom-color:var(--teal)}
+/* chat */
+.chatwrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;align-items:start}
+.chatlist{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;position:sticky;top:18px;max-height:calc(100vh - 220px);overflow:auto}
+.chatlist h3{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#51656F;margin:4px 6px 8px}
+.chat-it{display:block;width:100%;text-align:left;background:none;border:0;font:inherit;font-size:13px;color:var(--ink);padding:7px 8px;border-radius:7px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-it:hover{background:#EDF4F8}
+.chat-it.active{background:#E0F0F7;color:var(--teal-d);font-weight:600}
+.chatbox{background:#fff;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-height:440px}
+.msgs{flex:1;overflow:auto;padding:18px;max-height:calc(100vh - 330px)}
+.msg{margin:0 0 16px;max-width:92%}
+.msg .who{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--faint);margin-bottom:3px}
+.msg.user{margin-left:auto}
+.msg.user .who{text-align:right;color:var(--teal-d)}
+.msg.user .body{background:#E0F0F7;border-radius:12px 12px 2px 12px;padding:10px 14px;white-space:pre-wrap}
+.msg.coach .body{background:#F4F7F9;border-radius:12px 12px 12px 2px;padding:12px 15px;white-space:pre-wrap}
+.msg .mb{margin-top:5px;display:flex;gap:4px}
+.composer{border-top:1px solid var(--line);padding:12px;display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-height:44px;max-height:180px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px 0}
+.chip{font:inherit;font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:5px 11px;cursor:pointer;color:var(--teal-d)}
+.chip:hover{border-color:var(--teal)}
+.warnbox{background:#FBEFEA;border:1px solid #ECCDC0;border-radius:10px;padding:14px;color:#7B3B26;margin:10px 0}
+.okbox{background:#EDF6E6;border:1px solid #CFE4BC;border-radius:10px;padding:12px;color:#3C6B14;margin:10px 0}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:9px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:80vw}
+#toast.on{opacity:1}
+table.stats{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.stats th,table.stats td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;font-size:13.5px}
+table.stats th{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#51656F;background:#F4F7F9}
+table.stats input{border:0;padding:4px 2px;background:transparent;border-radius:4px;width:100%}
+table.stats input:focus{outline:2px solid rgba(0,141,186,.3)}
+@media(max-width:860px){.app{grid-template-columns:1fr}.side{position:static;height:auto}.chatwrap{grid-template-columns:1fr}.chatlist{position:static;max-height:160px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>Substack Coach</b><span>Patient Experience by Design</span></div>
+    <a class="backlink" href="./">&larr; Back to HMCG Studio</a>
+    <nav class="nav" id="nav">
+      <div class="nav-g">Work</div>
+      <button class="nav-item active" data-view="coach"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Coach</button>
+      <button class="nav-item" data-view="notes"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Notes</button>
+      <button class="nav-item" data-view="inspo"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.8.6 1.5 1.2 1.5 2.1h4c0-.9.7-1.5 1.5-2.1A6 6 0 0 0 12 3z"/></svg>Inspirations</button>
+      <button class="nav-item" data-view="stats"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><rect x="6" y="11" width="3" height="6"/><rect x="11" y="7" width="3" height="10"/><rect x="16" y="13" width="3" height="4"/></svg>Stats</button>
+      <div class="nav-g">Coach setup</div>
+      <button class="nav-item" data-view="memory"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-2 3 3 3 0 0 0 2 3v1a3 3 0 0 0 3 3h1V4z"/><path d="M15 4a3 3 0 0 1 3 3v1a3 3 0 0 1 2 3 3 3 0 0 1-2 3v1a3 3 0 0 1-3 3h-1V4z"/></svg>Memory &amp; style</button>
+      <button class="nav-item" data-view="settings"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Settings</button>
+    </nav>
+    <div class="side-foot">Remarkable Patient Experience by Design.<div id="savenote" style="margin-top:6px"></div></div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<div id="toast" role="status"></div>
+<script>
+/* ---------- tiny helpers (Studio conventions) ---------- */
+function $(s,el){return (el||document).querySelector(s)}
+function $$(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function uid(){return Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+var DOW=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+function wdIdx(d){return (new Date(d+'T12:00:00').getDay()+6)%7}
+function fmtD(d,o){try{return new Date(d+'T12:00:00').toLocaleDateString('en-US',o||{month:'short',day:'numeric'})}catch(e){return d}}
+var _tt;function toast(msg,err){var t=$('#toast');t.textContent=msg;t.style.background=err?'var(--warn)':'var(--ink)';t.classList.add('on');clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove('on')},2600)}
+function copyText(text,msg){var done=function(){toast(msg||'Copied')};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallback()})}else fallback();
+  function fallback(){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('Could not copy',true)}ta.remove()}}
+function acts(el,map){if(el._acts)el.removeEventListener('click',el._acts);el._acts=function(e){var b=e.target.closest('[data-act]');if(!b||!el.contains(b))return;var f=map[b.dataset.act];if(f){e.preventDefault();f(b,e)}};el.addEventListener('click',el._acts)}
+function head(kicker,h1,lead){return '<div class="kicker">'+kicker+'</div><h1>'+h1+'</h1>'+(lead?'<p class="lead">'+lead+'</p>':'')}
+function confirmBox(msg){return Promise.resolve(window.confirm(msg))}
+
+/* ---------- state ---------- */
+var K={state:'hmcg-subcoach-v1',key:'hmcg-anthropic-key',studio:'hmcg-studio-v1'};
+var SEED={
+  v:1,
+  memory:{
+    about:"I'm Melissa Gilkes-Smith, DHA(c), Founder and Principal of HMCG (Healthcare Management Consulting Group) and an instructor in the Health Administration program at MUSC. I have 18 years in healthcare operations.\n\nMy combined Substack publication is Patient Experience by Design (melissagilkessmith.substack.com), with three sections: The Practice of Leading (leadership, operations and career growth for small and mid-sized practice managers), Moments that Matter (patient experience and healthcare operations), and TouchPoints (my podcast: TouchPoints — Moments that Matter in Healthcare).\n\nMy audience is independent practices: practice owners and physician groups, plus early- and mid-career practice managers and administrators.\n\nYour Focused Five (@yourfocusedfive) is a completely separate brand — never reference, link or cross-promote it here.",
+    goals:"Grow Patient Experience by Design subscribers and engagement on Substack Notes.\nWarm readers toward the PX360 assessment (px360.hmcgllc-us.com), consultations, and the lead magnets: Make Your LinkedIn Profile Work for You (The Practice of Leading) and the Google Business Profile guide (Moments that Matter).\nBuild toward the Patient Experience by Design book launch on Feb 1, 2027, and a possible paid tier (paid subscribers get a free 15-minute monthly strategy call).\nGrow the subscriber chat, The Practice Leader's Lounge, and The Practice Leader's Bookshelf.",
+    style:"Hook first — the opening line has to earn the tap. Plain, warm, direct. Short paragraphs, concrete stories from practice operations, no jargon, no hashtags on Substack. Questions that invite replies from practice leaders. Patient and client stories are changed or combined so no one can be identified.\nMy signature line, exact wording, used sparingly as a closer: \"Because a remarkable patient experience doesn't happen by accident, it happens by design.\" In sign-offs it goes after my name (— Melissa), not before.",
+    playbook:"Weekly cadence (about 30 notes/week):\n- One rotating series note per weekday: Nine Pillars on Mon/Wed/Fri/Sun, The Focused Leader series on Tue/Thu/Sat.\n- Three Patient Experience by Design growth notes daily (post teaser, offer/lead magnet, question or restack).\n- A 15-minute reply block every evening at 8:30pm — engagement beats volume.\n- Up to 2 native video notes per week.\n- Wednesday \"One Idea\" post, 6:30am ET: 150–300 words, one point, bolded closing question.\nCoaching rules: never stack new notes on existing posting times; fit around the schedule. Keep The Practice of Leading and Moments that Matter distinct in voice and topic. Convert gently — value first, one CTA at most."
+  },
+  prefs:{useStudio:true,useStats:true,useNotes:true},
+  chats:[],cur:'',
+  notes:[],inspo:[],stats:[]
+};
+function readJSON(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function writeJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Could not save — storage is full or blocked',true)}}
+var S=readJSON(K.state,null)||JSON.parse(JSON.stringify(SEED));
+S.memory=S.memory||JSON.parse(JSON.stringify(SEED.memory));S.prefs=S.prefs||{useStudio:true,useStats:true,useNotes:true};
+S.chats=S.chats||[];S.notes=S.notes||[];S.inspo=S.inspo||[];S.stats=S.stats||[];
+function save(){writeJSON(K.state,S);var n=$('#savenote');if(n)n.textContent='Saved in this browser.'}
+function getKey(){try{return (localStorage.getItem(K.key)||'').trim()}catch(e){return ''}}
+S.settings=S.settings||{model:'claude-sonnet-4-5',maxTokens:2048};
+
+/* ---------- Studio connection (same origin) ---------- */
+function studioPosts(){try{
+  var st=readJSON(K.studio,null);if(!st||!st.posts)return null;
+  var t=today(),until=new Date(t+'T12:00:00');until.setDate(until.getDate()+14);
+  var lim=until.toISOString().slice(0,10);
+  var rows=st.posts.filter(function(p){
+    var chs=(p.channels&&p.channels.length)?p.channels:(p.channel?[p.channel]:[]);
+    return chs.some(function(c){return /^Substack/.test(c)})&&p.date&&p.date>=t&&p.date<=lim});
+  rows.sort(function(a,b){return (a.date||'').localeCompare(b.date||'')});
+  return rows.slice(0,40).map(function(p){
+    var chs=(p.channels&&p.channels.length)?p.channels:(p.channel?[p.channel]:[]);
+    return p.date+' ('+DOW[wdIdx(p.date)].slice(0,3)+') · '+chs.filter(function(c){return /^Substack/.test(c)}).join(', ')+' · '+(p.title||p.ctype||'post')+' · status: '+(p.status||'idea')+((p.caption||'').trim()?' · '+(p.caption||'').replace(/\s+/g,' ').slice(0,120):'')});
+}catch(e){return null}}
+
+/* ---------- coach system prompt ---------- */
+function systemPrompt(){
+  var m=S.memory,parts=[];
+  parts.push("You are Melissa's Substack coach inside her HMCG Studio — a sharp, encouraging growth coach for her publication Patient Experience by Design. You help her plan, draft and improve Substack Notes and posts, grow subscribers, and stay consistent without burning out.");
+  parts.push("Today is "+today()+" ("+DOW[wdIdx(today())]+").");
+  if(m.about)parts.push("ABOUT MELISSA AND HER PUBLICATIONS:\n"+m.about);
+  if(m.goals)parts.push("HER GOALS:\n"+m.goals);
+  if(m.style)parts.push("HER WRITING STYLE — write drafts in this voice:\n"+m.style);
+  if(m.playbook)parts.push("HER PLAYBOOK AND CADENCE:\n"+m.playbook);
+  if(S.prefs.useStudio){var sp=studioPosts();
+    if(sp&&sp.length)parts.push("FROM HER HMCG STUDIO CONTENT PLANNER — Substack items in the next two weeks:\n"+sp.join('\n'));
+    else if(sp)parts.push("Her HMCG Studio planner has no Substack items in the next two weeks.");}
+  if(S.prefs.useNotes&&S.notes.length){var ns=S.notes.slice(0,8).map(function(n){return '['+(n.status||'Draft')+' · '+(n.tag||'Note')+(n.date?' · '+n.date:'')+'] '+(n.text||'').replace(/\s+/g,' ').slice(0,160)});
+    parts.push("HER RECENT NOTES IN THIS APP (newest first):\n"+ns.join('\n'));}
+  if(S.prefs.useStats&&S.stats.length){var st=S.stats.slice(-8).map(function(r){return r.date+' · '+(r.pub||'PXbD')+' · subs '+(r.subs||'?')+' · notes '+(r.notes||'?')+' · views '+(r.views||'?')+' · likes '+(r.likes||'?')+' · replies '+(r.replies||'?')});
+    parts.push("HER TRACKED STATS (oldest to newest):\n"+st.join('\n'));}
+  parts.push("HOW TO COACH: Be specific and practical; reference her real cadence, planner and stats when relevant. When drafting, give ready-to-post text in her voice — hook first, no hashtags, one CTA at most — and offer 2–3 variants when asked for drafts. Keep answers tight. Never mention Your Focused Five. When she asks what to post, check the day of the week against her playbook.");
+  return parts.join('\n\n')}
+
+/* ---------- Claude API ---------- */
+var streaming=null;
+function askClaude(msgs,onDelta){
+  var key=getKey();
+  if(!key)return Promise.reject(new Error('Add your Anthropic API key in Settings first.'));
+  var ctrl=new AbortController();streaming=ctrl;
+  return fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',signal:ctrl.signal,
+    headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:S.settings.model||'claude-sonnet-4-5',max_tokens:+S.settings.maxTokens||2048,system:systemPrompt(),messages:msgs,stream:true})
+  }).then(function(res){
+    if(!res.ok)return res.text().then(function(tx){var m='';try{m=(JSON.parse(tx).error||{}).message||''}catch(e){}
+      throw new Error('Claude said no ('+res.status+')'+(m?': '+m:''))});
+    var rd=res.body.getReader(),dec=new TextDecoder(),buf='',out='';
+    function pump(){return rd.read().then(function(x){
+      if(x.done)return out;
+      buf+=dec.decode(x.value,{stream:true});
+      var lines=buf.split('\n');buf=lines.pop();
+      lines.forEach(function(ln){ln=ln.trim();if(ln.indexOf('data:')!==0)return;var d=ln.slice(5).trim();if(!d||d==='[DONE]')return;
+        try{var ev=JSON.parse(d);
+          if(ev.type==='content_block_delta'&&ev.delta&&ev.delta.text){out+=ev.delta.text;onDelta(out)}
+          if(ev.type==='error')throw new Error((ev.error||{}).message||'stream error');
+        }catch(e){if(e instanceof SyntaxError)return;throw e}});
+      return pump()});}
+    return pump()
+  }).finally(function(){streaming=null})}
+
+/* ---------- views ---------- */
+var RENDER={};var current='coach';
+function go(v){current=v;$$('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.view===v)});render();
+  if(location.hash!=='#'+v)history.replaceState(null,'','#'+v)}
+function render(){var el=$('#main');try{RENDER[current](el)}catch(e){console.error(e);
+  el.innerHTML='<div class="warnbox"><b>This page hit an error:</b> '+esc(e.message)+'. Your data is safe.</div>'}}
+$$('.nav-item').forEach(function(b){b.addEventListener('click',function(){go(b.dataset.view)})});
+window.addEventListener('hashchange',function(){var h=location.hash.slice(1);if(h&&RENDER[h]&&h!==current)go(h)});
+
+/* field binding (Studio pattern, simplified) */
+document.addEventListener('input',function(e){var el=e.target;if(!el.dataset||!el.dataset.path)return;
+  var path=el.dataset.path.split('.'),o=S;for(var i=0;i<path.length-1;i++){o=o[isNaN(+path[i])?path[i]:+path[i]];if(o==null)return}
+  o[isNaN(+path[path.length-1])?path[path.length-1]:+path[path.length-1]]=el.type==='checkbox'?el.checked:el.value;save()});
+document.addEventListener('change',function(e){var el=e.target;if(el.dataset&&el.dataset.re!=null){save();
+  setTimeout(function(){var a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;render()},220)}});
+function F(label,path,o){o=o||{};var path2=path.split('.'),v=S;path2.forEach(function(k){if(v!=null)v=v[isNaN(+k)?k:+k]});if(v==null)v='';
+  var at=' data-path="'+path+'"'+(o.re?' data-re="1"':'')+(o.ph?' placeholder="'+esc(o.ph)+'"':'');
+  var c=o.rows?'<textarea rows="'+o.rows+'"'+at+'>'+esc(v)+'</textarea>'
+    :o.opts?'<select'+at+'>'+o.opts.map(function(x){return '<option value="'+esc(x)+'"'+(String(x)===String(v)?' selected':'')+'>'+esc(x)+'</option>'}).join('')+'</select>'
+    :'<input type="'+(o.type||'text')+'"'+at+' value="'+esc(v)+'">';
+  return '<div class="fld">'+(label?'<label>'+label+'</label>':'')+c+(o.help?'<div class="hint" style="margin-top:4px">'+o.help+'</div>':'')+'</div>'}
+</script>
+<script>
+/* ---------- Coach view ---------- */
+var CHIPS=[
+ ["What should I post today?","Given my playbook and today's weekday, what should I post on Substack today? Draft each item ready to post."],
+ ["Draft 3 growth notes","Draft my three Patient Experience by Design growth notes for today: a teaser, an offer note, and a question or restack note. Ready to post, in my voice."],
+ ["This week's One Idea","Give me 3 candidate topics for this Wednesday's One Idea post, then draft the best one (150–300 words, one point, bolded closing question)."],
+ ["Sharpen my hooks","I'll paste a note — rewrite the first line 5 ways so it earns the tap."],
+ ["Weekly review","Act as my growth coach: using my stats, planner and recent notes, tell me what's working, what to cut, and the one thing to do this week."]];
+function curChat(){var c=S.chats.filter(function(x){return x.id===S.cur})[0];
+  if(!c){c={id:uid(),name:'New chat',msgs:[],created:today()};S.chats.unshift(c);S.cur=c.id;save()}return c}
+function msgHtml(m,i){
+  if(m.role==='user')return '<div class="msg user"><div class="who">Melissa</div><div class="body">'+esc(m.content)+'</div></div>';
+  return '<div class="msg coach"><div class="who">Coach</div><div class="body" data-mi="'+i+'">'+esc(m.content)+'</div>'+
+   '<div class="mb"><button class="btn-link" data-act="mcopy" data-i="'+i+'">Copy</button><button class="btn-link" data-act="mnote" data-i="'+i+'">Save to Notes</button></div></div>'}
+RENDER.coach=function(el){var c=curChat(),key=getKey();
+  el.innerHTML=head('Substack Coach','Coach','Your Substack growth coach — it knows your publications, cadence, planner, notes and stats, and drafts in your voice.')+
+   (key?'':'<div class="warnbox"><b>No API key yet.</b> Add your Anthropic API key in <a href="#settings" onclick="go(\'settings\');return false">Settings</a> — it stays in this browser only.</div>')+
+   '<div class="chatwrap"><div class="chatlist"><h3>Chats</h3><button class="btn btn-ghost btn-sm" data-act="newchat" style="width:100%;justify-content:center;margin-bottom:8px">New chat</button>'+
+     S.chats.map(function(x){return '<button class="chat-it'+(x.id===S.cur?' active':'')+'" data-act="pick" data-id="'+x.id+'" title="'+esc(x.name)+'">'+esc(x.name)+'</button>'}).join('')+
+     (S.chats.length>1?'<button class="btn-link" data-act="delchat" style="margin-top:6px">Delete this chat</button>':'')+'</div>'+
+   '<div class="chatbox">'+
+     '<div class="chips">'+CHIPS.map(function(x,i){return '<button class="chip" data-act="chip" data-i="'+i+'">'+esc(x[0])+'</button>'}).join('')+'</div>'+
+     '<div class="msgs" id="msgs">'+(c.msgs.length?c.msgs.map(msgHtml).join(''):'<div class="empty" style="border:0"><b>Morning, Melissa.</b><br>Ask for today’s notes, paste a draft for feedback, or press a prompt above.</div>')+'</div>'+
+     '<div class="composer"><textarea id="box" placeholder="Ask your coach… (Enter sends, Shift+Enter for a new line)"></textarea>'+
+     '<button class="btn btn-primary" data-act="send" id="sendbtn">'+(streaming?'Stop':'Send')+'</button></div></div></div>';
+  var msgs=$('#msgs');msgs.scrollTop=msgs.scrollHeight;
+  var box=$('#box');box.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
+  function sendMsg(txt){
+    if(streaming){streaming.abort();return}
+    var t=(txt!=null?txt:box.value).trim();if(!t)return;
+    if(!getKey()){go('settings');toast('Add your Anthropic API key first',true);return}
+    var ch=curChat();ch.msgs.push({role:'user',content:t});
+    if(ch.name==='New chat')ch.name=t.replace(/\s+/g,' ').slice(0,42);
+    ch.msgs.push({role:'assistant',content:''});save();render();
+    var el2=$('#msgs');el2.scrollTop=el2.scrollHeight;$('#sendbtn').textContent='Stop';
+    var hist=ch.msgs.slice(0,-1).map(function(m){return {role:m.role,content:m.content}});
+    askClaude(hist,function(sofar){ch.msgs[ch.msgs.length-1].content=sofar;
+      var body=$('#msgs .msg:last-child .body');if(body){body.textContent=sofar;el2.scrollTop=el2.scrollHeight}})
+     .then(function(out){ch.msgs[ch.msgs.length-1].content=out||ch.msgs[ch.msgs.length-1].content;save();render()})
+     .catch(function(e){if(e.name==='AbortError'){save();render();return}
+       ch.msgs.pop();save();render();toast(e.message,true)})}
+  acts(el,{
+    send:function(){sendMsg()},
+    chip:function(b){sendMsg(CHIPS[+b.dataset.i][1])},
+    newchat:function(){var c2={id:uid(),name:'New chat',msgs:[],created:today()};S.chats.unshift(c2);S.cur=c2.id;save();render()},
+    pick:function(b){S.cur=b.dataset.id;save();render()},
+    delchat:function(){confirmBox('Delete this chat? The messages are gone for good.').then(function(ok){if(!ok)return;
+      S.chats=S.chats.filter(function(x){return x.id!==S.cur});S.cur=(S.chats[0]||{}).id||'';save();render()})},
+    mcopy:function(b){var c3=curChat();copyText((c3.msgs[+b.dataset.i]||{}).content||'','Copied')},
+    mnote:function(b){var c4=curChat(),m=(c4.msgs[+b.dataset.i]||{}).content||'';if(!m)return;
+      S.notes.unshift({id:uid(),date:today(),tag:'From the coach',status:'Draft',text:m});save();toast('Saved to Notes')}
+  })};
+
+/* ---------- Notes ---------- */
+var NOTE_TAGS=['PXbD growth','Nine Pillars','The Focused Leader','One Idea','Moments that Matter','From the coach','Other'];
+var NOTE_STATUS=['Idea','Draft','Ready','Posted'];
+RENDER.notes=function(el){var list=S.notes;
+  var row=function(n){var i=S.notes.indexOf(n),open=S.openNote===n.id;
+    return '<div class="note-row"><div class="note-date">'+(n.date?fmtD(n.date):'—')+'<span>'+(n.date?DOW[wdIdx(n.date)].slice(0,3):'')+'</span></div>'+
+     '<div class="note-main"><div class="clamp">'+esc(n.text||'(empty note)')+'</div>'+
+     '<div class="note-meta">'+[n.tag,(n.text||'').length+' characters'].filter(Boolean).map(esc).join(' · ')+'</div></div>'+
+     '<span class="pill '+(n.status==='Posted'?'posted':n.status==='Ready'?'ready':'draft')+'">'+esc(n.status||'Draft')+'</span>'+
+     '<div class="btns"><button class="btn btn-ghost btn-sm" data-act="ncopy" data-id="'+n.id+'">Copy</button>'+
+      '<button class="btn btn-ghost btn-sm" data-act="ncoach" data-id="'+n.id+'">Coach feedback</button>'+
+      '<button class="btn-link" data-act="nopen" data-id="'+n.id+'">'+(open?'Close':'Open')+'</button>'+
+      '<button class="btn-link" data-act="nrm" data-id="'+n.id+'">Remove</button></div>'+
+     (open?'<div class="edit"><div class="row">'+F('Posts on','notes.'+i+'.date',{type:'date',re:1})+F('Series / tag','notes.'+i+'.tag',{opts:NOTE_TAGS,re:1})+F('Status','notes.'+i+'.status',{opts:NOTE_STATUS,re:1})+'</div>'+
+      F('The note','notes.'+i+'.text',{rows:6,re:1,help:'Hook first — the opening line has to earn the tap. No hashtags on Substack.'})+'</div>':'')+'</div>'};
+  el.innerHTML=head('Substack Coach','Notes','Your Substack Notes bank — drafts, ready-to-post and posted. The coach reads the newest ones.')+
+   '<div class="bar"><button class="btn btn-primary btn-sm" data-act="nnew">Add a note</button></div>'+
+   (list.length?list.map(row).join(''):'<div class="empty"><b>No notes yet.</b><br>Press <b>Add a note</b>, or save a coach draft from the chat.</div>');
+  acts(el,{
+    nnew:function(){S.notes.unshift({id:uid(),date:today(),tag:'PXbD growth',status:'Draft',text:''});S.openNote=S.notes[0].id;save();render()},
+    nopen:function(b){S.openNote=S.openNote===b.dataset.id?'':b.dataset.id;save();render()},
+    ncopy:function(b){var n=S.notes.filter(function(x){return x.id===b.dataset.id})[0];if(n)copyText(n.text||'','Note copied')},
+    ncoach:function(b){var n=S.notes.filter(function(x){return x.id===b.dataset.id})[0];if(!n)return;
+      go('coach');setTimeout(function(){var box=$('#box');if(box){box.value='Review this note before I post it — tighten the hook, flag anything off-voice, then give me your best rewrite:\n\n'+(n.text||'');box.focus()}},50)},
+    nrm:function(b){confirmBox('Remove this note from the Studio?').then(function(ok){if(!ok)return;
+      S.notes=S.notes.filter(function(x){return x.id!==b.dataset.id});save();render()})}
+  })};
+
+/* ---------- Inspirations ---------- */
+RENDER.inspo=function(el){var list=S.inspo;
+  var row=function(n){var i=S.inspo.indexOf(n),open=S.openInspo===n.id;
+    return '<div class="note-row" style="grid-template-columns:minmax(0,1fr) auto"><div class="note-main"><div class="clamp">'+esc(n.text||'(empty)')+'</div>'+
+     '<div class="note-meta">'+esc(n.src||'')+'</div></div>'+
+     '<div class="btns"><button class="btn btn-ghost btn-sm" data-act="iriff" data-id="'+n.id+'">Riff on this</button>'+
+      '<button class="btn-link" data-act="iopen" data-id="'+n.id+'">'+(open?'Close':'Open')+'</button>'+
+      '<button class="btn-link" data-act="irm" data-id="'+n.id+'">Remove</button></div>'+
+     (open?'<div class="edit">'+F('The idea, hook or swipe','inspo.'+i+'.text',{rows:4,re:1})+F('Where it came from','inspo.'+i+'.src',{ph:'A note you saw, a client call, a book…',re:1})+'</div>':'')+'</div>'};
+  el.innerHTML=head('Substack Coach','Inspirations','Your swipe file — hooks, angles and ideas worth stealing from yourself. The coach can riff on any of them.')+
+   '<div class="bar"><button class="btn btn-primary btn-sm" data-act="inew">Add an inspiration</button></div>'+
+   (list.length?list.map(row).join(''):'<div class="empty"><b>Nothing banked yet.</b><br>Drop in hooks, reader questions, lines from client calls — anything that could become a note.</div>');
+  acts(el,{
+    inew:function(){S.inspo.unshift({id:uid(),text:'',src:''});S.openInspo=S.inspo[0].id;save();render()},
+    iopen:function(b){S.openInspo=S.openInspo===b.dataset.id?'':b.dataset.id;save();render()},
+    iriff:function(b){var n=S.inspo.filter(function(x){return x.id===b.dataset.id})[0];if(!n)return;
+      go('coach');setTimeout(function(){var box=$('#box');if(box){box.value='Riff on this idea — give me 3 Substack Notes in my voice, each with a different angle:\n\n'+(n.text||'');box.focus()}},50)},
+    irm:function(b){confirmBox('Remove this inspiration?').then(function(ok){if(!ok)return;
+      S.inspo=S.inspo.filter(function(x){return x.id!==b.dataset.id});save();render()})}
+  })};
+
+/* ---------- Stats ---------- */
+var PUBS=['Patient Experience by Design','The Practice of Leading','Moments that Matter','TouchPoints'];
+RENDER.stats=function(el){
+  var rows=S.stats.map(function(r,i){
+    return '<tr><td><input type="date" data-path="stats.'+i+'.date" value="'+esc(r.date||'')+'"></td>'+
+     '<td><select data-path="stats.'+i+'.pub">'+PUBS.map(function(p){return '<option'+(p===r.pub?' selected':'')+'>'+p+'</option>'}).join('')+'</select></td>'+
+     ['subs','notes','views','likes','replies'].map(function(k){return '<td><input type="text" data-path="stats.'+i+'.'+k+'" value="'+esc(r[k]||'')+'"></td>'}).join('')+
+     '<td><button class="btn-link" data-act="srm" data-i="'+i+'">Remove</button></td></tr>'}).join('');
+  el.innerHTML=head('Substack Coach','Stats','A simple weekly log — subscribers, notes posted, views, likes, replies. The coach reads the last eight rows.')+
+   '<div class="bar"><button class="btn btn-primary btn-sm" data-act="snew">Add a row</button><span class="hint">Substack → Stats, once a week is plenty.</span></div>'+
+   (S.stats.length?'<table class="stats"><tr><th>Date</th><th>Publication</th><th>Subscribers</th><th>Notes posted</th><th>Views</th><th>Likes</th><th>Replies</th><th></th></tr>'+rows+'</table>'
+    :'<div class="empty"><b>No stats yet.</b><br>Add a row each week and the coach starts spotting trends.</div>');
+  acts(el,{
+    snew:function(){S.stats.push({date:today(),pub:PUBS[0],subs:'',notes:'',views:'',likes:'',replies:''});save();render()},
+    srm:function(b){S.stats.splice(+b.dataset.i,1);save();render()}
+  })};
+
+/* ---------- Memory ---------- */
+RENDER.memory=function(el){
+  el.innerHTML=head('Substack Coach','Memory &amp; style','What the coach knows about you. Edit anything — it is sent with every message, so keep it current and keep it yours.')+
+   '<div class="card" style="margin-bottom:14px">'+F('About you and your publications','memory.about',{rows:8})+'</div>'+
+   '<div class="card" style="margin-bottom:14px">'+F('Your goals','memory.goals',{rows:6})+'</div>'+
+   '<div class="card" style="margin-bottom:14px">'+F('Your writing style','memory.style',{rows:6,help:'Drafts come back in this voice.'})+'</div>'+
+   '<div class="card" style="margin-bottom:14px">'+F('Playbook and cadence','memory.playbook',{rows:9})+'</div>'+
+   '<div class="card"><label style="display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#51656F;font-weight:700;margin-bottom:8px">What else the coach reads</label>'+
+    '<label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" data-path="prefs.useStudio" '+(S.prefs.useStudio?'checked':'')+' style="width:auto"> The HMCG Studio planner — Substack items in the next two weeks <span class="hint">(works when this page is on the same site as the Studio)</span></label>'+
+    '<label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" data-path="prefs.useNotes" '+(S.prefs.useNotes?'checked':'')+' style="width:auto"> Your newest notes in this app</label>'+
+    '<label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" data-path="prefs.useStats" '+(S.prefs.useStats?'checked':'')+' style="width:auto"> Your tracked stats</label></div>';
+  acts(el,{})};
+
+/* ---------- Settings ---------- */
+RENDER.settings=function(el){var key=getKey();
+  el.innerHTML=head('Substack Coach','Settings','The key stays in this browser only — never in the file, never in backups.')+
+   '<div class="card" style="margin-bottom:14px"><div class="row">'+
+    '<div class="fld" style="flex:2;min-width:260px"><label>Anthropic API key</label><input type="password" id="apikey" value="'+esc(key)+'" placeholder="sk-ant-…"><div class="hint" style="margin-top:4px">From <span style="white-space:nowrap">console.anthropic.com</span> → API keys. Kept in this browser’s storage only.</div></div>'+
+    F('Model','settings.model',{ph:'claude-sonnet-4-5',help:'A Claude model name or alias. Change it any time.'})+
+    F('Reply length (max tokens)','settings.maxTokens',{type:'number'})+'</div>'+
+   '<div class="bar"><button class="btn btn-primary btn-sm" data-act="ping">Test the connection</button><button class="btn btn-ghost btn-sm" data-act="clearkey">Forget the key</button></div><div id="pingout"></div></div>'+
+   '<div class="card"><label style="display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#51656F;font-weight:700;margin-bottom:8px">Backups</label>'+
+    '<div class="bar" style="margin:0"><button class="btn btn-ghost btn-sm" data-act="bk">Back up this app</button><button class="btn btn-ghost btn-sm" data-act="rs">Restore</button><input type="file" id="rsfile" accept=".json" hidden><span class="hint">Notes, chats, memory and stats — the API key is never included.</span></div></div>';
+  $('#apikey').addEventListener('input',function(){try{localStorage.setItem(K.key,this.value.trim())}catch(e){toast('Could not store the key',true)}});
+  acts(el,{
+    ping:function(b){var out=$('#pingout');out.innerHTML='<div class="hint" style="margin-top:10px">Asking Claude…</div>';
+      askClaude([{role:'user',content:'Reply with exactly: Ready to coach.'}],function(){}).then(function(r){
+        out.innerHTML='<div class="okbox">Connected — the coach says: “'+esc((r||'').trim().slice(0,80))+'”</div>'})
+       .catch(function(e){out.innerHTML='<div class="warnbox">'+esc(e.message)+'</div>'})},
+    clearkey:function(){try{localStorage.removeItem(K.key)}catch(e){}render();toast('Key forgotten')},
+    bk:function(){var data=JSON.parse(JSON.stringify(S));
+      var blob=new Blob([JSON.stringify({app:'hmcg-substack-coach',when:new Date().toISOString(),data:data},null,1)],{type:'application/json'});
+      var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='substack-coach-backup-'+today()+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},5000)},
+    rs:function(){var f=$('#rsfile');f.onchange=function(){var file=f.files[0];if(!file)return;
+      file.text().then(function(tx){var j=JSON.parse(tx);if(!j||j.app!=='hmcg-substack-coach'||!j.data)throw new Error('bad file');
+        S=j.data;S.settings=S.settings||{model:'claude-sonnet-4-5',maxTokens:2048};save();render();toast('Restored')})
+       .catch(function(){toast('That is not a Substack Coach backup',true)});f.value=''};f.click()}
+  })};
+
+/* ---------- boot ---------- */
+(function(){var h=location.hash.slice(1);if(h&&RENDER[h])current=h;
+  $$('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.view===current)});
+  render();save()})();
+</script>
+</body>
+</html>
