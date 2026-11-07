@@ -101,7 +101,7 @@ table.stats input:focus{outline:2px solid rgba(0,141,186,.3)}
 <div class="app">
   <aside class="side">
     <div class="brand"><b>Substack Coach</b><span>Patient Experience by Design</span></div>
-    <a class="backlink" href="./">&larr; Back to HMCG Studio</a>
+    <a class="backlink" id="backlink" href="./">&larr; Back to HMCG Studio</a>
     <nav class="nav" id="nav">
       <div class="nav-g">Work</div>
       <button class="nav-item active" data-view="coach"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Coach</button>
@@ -399,7 +399,9 @@ RENDER.settings=function(el){var key=getKey();
   })};
 
 /* ---------- boot ---------- */
-(function(){var h=location.hash.slice(1);if(h&&RENDER[h])current=h;
+(function(){if(location.protocol==='file:'||!/hmcg-studio/.test(location.hostname))
+    $('#backlink').href='https://hmcg-studio.netlify.app/';
+  var h=location.hash.slice(1);if(h&&RENDER[h])current=h;
   $$('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.view===current)});
   render();save()})();
 </script>
